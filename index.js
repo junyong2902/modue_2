@@ -72,19 +72,15 @@ app.get('/Travel_Club', (req, res) => {
 });
 
 //맴버 가입
-app.post(`/Community_Member`, (req, res) => {
+app.post('/Club_Membership_signup/:member_id', (req, res) => {
   var member_id=req.body.member_id;
-  var member_pd=req.body.member_pd;
-  var member_name=req.body.member_name;
-  var member_email=req.body.member_email;
-  var member_phnumber=req.body.member_phnumber;
-  
-  
-  connection.query("INSERT INTO Community_Member(member_id, member_pd, member_name, member_email, member_phnumber) VALUES(?,?,?,?,?)", [member_id, member_pd, member_name, member_email, member_phnumber]
-  , (error, results, fields) => {
-    if (error) throw error;
-    res.json({ok:"member_signup"});
-  });  
+  var club_role= req.body.club_role;
+  var club_joindate=req.body.club_joindate
+  connection.query("INSERT INTO Club_Membership(member_id, club_name, club_role, club_joindate) VALUES(?,?,?,?)",
+  [member_id, club_name, club_role, club_joindate], (error, results, fields) => {
+   if (error) throw error;
+   res.json({ok:"club_signup"});
+  });
 });
 
 
@@ -119,20 +115,11 @@ app.post(`/Community_Member/:member_id/update`, (req, res) => {
 
 
 
-
-
-
-
-
-
-app.get('/members/:id', (req, res) => {
-  connection.query('SELECT * from [회원목록테이블] WHERE [조건]', (error, rows) => {
+//회원 탈퇴
+app.delete('/Club_Membership_delete/:member_id', (req, res) => {
+  connection.query('DELETE FROM Club_Membership WHERE member_id=? and club_name = ?',[member_id, club_name], (error, rows) => {
     if (error) throw error;
-    console.log('User detail info is: ', rows);
+    console.log('member info is: ', rows);
     res.send(rows);
   });
-});
-
-app.listen(app.get('port'), () => {
-  console.log('Express server listening on port ' + app.get('port'));
 });
